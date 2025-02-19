@@ -8,12 +8,16 @@ def readRegs(n):
     if switch._check_state:
         n = 5
     regs = client.read_holding_registers(0, n)
+    textbox.insert(ctk.END, regs)
+    textbox.insert(ctk.END, '\n')
     print(regs)
 
 def writeRegs(n):
     res = client.write_multiple_registers(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     print(res)
 
+def showSegment(seg):
+    print(seg)
 
 
 ctk.set_default_color_theme("blue")
@@ -31,6 +35,7 @@ app.rowconfigure(1, weight=1)
 app.rowconfigure(2, weight=1)
 app.rowconfigure(3, weight=1)
 app.rowconfigure(4, weight=1)
+app.rowconfigure(5, weight=1)
 
 
 title = ctk.CTkLabel(app, text="Test", height=30, font=("Roboto", 30))
@@ -54,6 +59,13 @@ btnWrite.grid(row=3, column=1, padx=(0,10), pady=(10,0), sticky='nsew')
 
 switch = ctk.CTkSwitch(app, text="Read half")
 switch.grid(row=4, column=0)
+
+segments = ['One', 'Two', 'Three']
+segButton = ctk.CTkSegmentedButton(app, values=segments, command=showSegment)
+segButton.grid(row=4, column=1)
+
+textbox = ctk.CTkTextbox(app)
+textbox.grid(row=5, column=0, columnspan=2, sticky='nesw')
 
 # TCP auto connect on first modbus request
 client = ModbusClient(host="172.31.7.125", port=502, unit_id=1, auto_open=True)
